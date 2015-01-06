@@ -28,6 +28,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lab.expeditionfortreasure.MainActivity" />
         </activity>
+        <activity
+            android:name=".QuestActivity"
+            android:label="@string/title_activity_quest" >
+        </activity>
+        <activity
+            android:name=".TreasureActivity"
+            android:label="@string/title_activity_treasure" >
+        </activity>
+        <activity
+            android:name=".MapActivity"
+            android:label="@string/title_activity_map" >
+        </activity>
     </application>
 
 </manifest>
