@@ -1,35 +1,41 @@
 package com.lab.expeditionfortreasure.logic;
 
+import android.util.Log;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
-import gamelogic.building.*;
-import gamelogic.building.Building.Type;
+import com.lab.expeditionfortreasure.logic.building.*;
 
-public class gameLogic {
+public class GameLogic implements Serializable{
 	private int gold;
 	private HashMap<Building.Type, Building> city;
-	
-	public gameLogic() {
-		// TODO Auto-generated constructor stub
-		init();
-	}
+    private static GameLogic instance = null;
+
+	private GameLogic() {
+        init();
+    }
 	
 	//Initiate one of each kind
-	public void init(){
+	private void init(){
 		city = new HashMap<Building.Type, Building>();
-		city.put(Type.FARM, new Farm());
-		city.put(Type.TAVERN, new Tavern());
-		city.put(Type.LIBRARY, new Library());
-		city.put(Type.BARRACKS, new Barrack());
-		
-		gold = 0;
+		city.put(Building.Type.FARM, new Farm());
+		city.put(Building.Type.TAVERN, new Tavern());
+		city.put(Building.Type.LIBRARY, new Library());
+		city.put(Building.Type.BARRACKS, new Barrack());
+
+
+        //TODO Ändra start guld
+		gold = 5000;
 	}
 	
 	public boolean buyBuilding(Building.Type building){
+
 		if(gold >= city.get(building).getCurrentPrice() ){
 			gold -= city.get(building).getCurrentPrice();
 			city.get(building).buyOneLevel();
-			return true;
+            Log.d("GameLogic", "Bought a level " + getBuildingLevel(building));
+            return true;
 		}
 		else 
 			return false;
@@ -38,10 +44,20 @@ public class gameLogic {
 	public int getBuildingLevel(Building.Type building){
 		return city.get(building).getLevel();
 	}
-	
+
+    public int getGold() { return gold; }
+
 	public int getBuildingPrice(Building.Type building){
 		return city.get(building).getCurrentPrice();
 	}
+
+    public static GameLogic getInstance() {
+        if(instance == null ) {
+            instance = new GameLogic();
+        }
+
+        return instance;
+    }
 	
 	
 }
