@@ -1,6 +1,10 @@
 package com.expeditionfortreasure;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,13 +15,16 @@ import android.view.View;
 import com.expeditionfortreasure.logic.GameLogic;
 
 
-public class QuestActivity extends ActionBarActivity {
+public class QuestActivity extends ActionBarActivity implements LocationListener{
     GameLogic gl;
+    Location loc;
+    private LocationManager locationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest);
         gl = GameLogic.getInstance();
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
     }
 
 
@@ -26,6 +33,12 @@ public class QuestActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_quest, menu);
         return true;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
     }
 
     @Override
@@ -44,10 +57,19 @@ public class QuestActivity extends ActionBarActivity {
     }
 
     public void newQuest(View view){
+        Log.d("Treasure", "Start locationlistne");
+        if(loc != null) {
+            Log.d("Treasure", "My Location" + loc.getLatitude() + "/" + loc.getLongitude());
 
-        gl.newQuest();
-        int number = gl.getCurrentQuest().number;
-        Log.v("Quest", "New quest " + number);
+            gl.newQuest(loc);
+
+            Log.d("Treasure", "trs loc " + gl.getCurrentQuest().getTreasure().latitude + "/" + gl.getCurrentQuest().getTreasure().longitude);
+
+        }
+        else
+            Log.d("Treasure", "No location");
+       // int number = gl.getCurrentQuest().number;
+       // Log.v("Quest", "New quest " + number);
     }
 
     public void abortQuest(View view){
@@ -63,4 +85,16 @@ public class QuestActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        loc = location;
+    }
+
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+    @Override
+    public void onProviderEnabled(String provider) {}
+    @Override
+    public void onProviderDisabled(String provider) {}
 }
