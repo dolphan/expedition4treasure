@@ -13,13 +13,10 @@ public class Quest {
     //TODO Change this so that the reward is based on distance to treasure
     public int reward = 500;
     boolean finished;
-    public int number;
     LatLng treasure;
 
     private Quest(Location myLocation){
-        number = (int) (Math.random()/20.0);
-        treasure = new LatLng(myLocation.getLatitude() + (Math.random()/20.0), myLocation.getLongitude() + (Math.random()/20.0) );
-        Log.d("Quest", "#" + number);
+        treasure = randomizeTreasure(myLocation);
     }
 
 
@@ -33,6 +30,15 @@ public class Quest {
 
     public LatLng getTreasure(){
         return treasure;
+    }
+
+    private LatLng randomizeTreasure(Location location){
+        double lat, lng;
+        double angle = (Math.random()*2*Math.PI);
+        lat = location.getLatitude() + Math.cos(angle);
+        lng = location.getLongitude() + Math.sin(angle);
+
+        return new LatLng(lat,lng);
     }
 
 }
