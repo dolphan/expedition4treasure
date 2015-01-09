@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.expeditionfortreasure.logic.GameLogic;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -30,6 +31,7 @@ public class MapActivity extends ActionBarActivity {
     static final LatLng HAMBURG = new LatLng(53.558, 9.927);
     private LocationManager locationManager;
     private MyLocationListener locationListener;
+    private GameLogic gameLogic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,9 @@ public class MapActivity extends ActionBarActivity {
         // Create our LocationListener
         locationListener = new MyLocationListener(getFragmentManager(), this);
         Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        gameLogic = gameLogic.getInstance();
     }
 
     @Override
@@ -50,6 +55,11 @@ public class MapActivity extends ActionBarActivity {
         // Turning on GPS (Starting to request location)
         Log.d("GPS", "Turning on GPS");
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+
+        LatLng treasure = new LatLng(gameLogic.getCurrentQuest().getTreasure().latitude, gameLogic.getCurrentQuest().getTreasure().longitude);
+
+        Marker myLocation = map.addMarker(new MarkerOptions().position(treasure).title("Treasure"));
+
     }
 
     @Override
