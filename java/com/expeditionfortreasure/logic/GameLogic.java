@@ -1,5 +1,6 @@
 package com.expeditionfortreasure.logic;
 
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
@@ -7,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.expeditionfortreasure.QuestActivity;
 import com.expeditionfortreasure.logic.building.Building;
 import com.expeditionfortreasure.logic.building.*;
 
@@ -52,11 +54,11 @@ public class GameLogic implements Serializable{
 
 	public int getBuildingPrice(Building.Type building){ return city.get(building).getCurrentPrice(); }
 
-    public void newQuest(Location myLocation){
+    public void newQuest(Location myLocation, Context context){
         if(currentQuest == null) {
             Log.d("Quest","Getting new quest");
 
-            currentQuest = Quest.getNewQuest(myLocation);
+            currentQuest = Quest.getNewQuest(myLocation, context);
             Log.d("Quest","Got quest");
             //TODO CHANGE, ONLY FOR DEBUG
             completedQuests.add(currentQuest);
@@ -85,7 +87,6 @@ public class GameLogic implements Serializable{
 
     public void readQuestLog(){
         for(Quest q : completedQuests){
-            Log.v("QUEST", "" + q.number);
         }
     }
 

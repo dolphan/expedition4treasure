@@ -38,7 +38,7 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
     @Override
     protected void onResume(){
         super.onResume();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
     }
 
     @Override
@@ -58,16 +58,23 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
 
     public void newQuest(View view){
         Log.d("Treasure", "Start locationlistne");
+
+        // Problem: Sometimes we don't have a location yet, should fix this (Waiting for location?)
+
         if(loc != null) {
-            Log.d("Treasure", "My Location" + loc.getLatitude() + "/" + loc.getLongitude());
+            // We don't want to generate a quest unless our position is relatively accurate
+            if(loc.getAccuracy() < 50) {
+                Log.d("Treasure", "My Location" + loc.getLatitude() + "/" + loc.getLongitude());
 
-            gl.newQuest(loc);
+                gl.newQuest(loc, this);
 
-            Log.d("Treasure", "trs loc " + gl.getCurrentQuest().getTreasure().latitude + "/" + gl.getCurrentQuest().getTreasure().longitude);
-
+                Log.d("Treasure", "trs loc " + gl.getCurrentQuest().getTreasure().latitude + "/" + gl.getCurrentQuest().getTreasure().longitude);
+            }
         }
-        else
+        else {
+            // Should notify user that he could not be located (toast?)
             Log.d("Treasure", "No location");
+        }
        // int number = gl.getCurrentQuest().number;
        // Log.v("Quest", "New quest " + number);
     }
@@ -87,9 +94,17 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d("GPS","Location changed");
         loc = location;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Log.d("GPS", "Turning off GPS");
+        locationManager.removeUpdates(this);
+    }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
