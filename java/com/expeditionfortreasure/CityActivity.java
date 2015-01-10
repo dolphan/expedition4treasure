@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ public class CityActivity extends ActionBarActivity {
     private GameLogic gl;
     private TextView gold;
     private TextView farmprice, tavernprice, libraryprice, barracksprice;
+    private Button farmbutton, tavernbutton, librarybutton, barracksbutton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +31,10 @@ public class CityActivity extends ActionBarActivity {
         tavernprice = (TextView) findViewById(R.id.tavernprice);
         libraryprice = (TextView) findViewById(R.id.libraryprice);
         barracksprice = (TextView) findViewById(R.id.barracksprice);
+        farmbutton = (Button) findViewById(R.id.farmbuilding);
+        tavernbutton = (Button) findViewById(R.id.tavernbuilding);
+        librarybutton = (Button) findViewById(R.id.librarybuilding);
+        barracksbutton = (Button) findViewById(R.id.barracksbuilding);
 
     }
 
@@ -55,79 +62,96 @@ public class CityActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        gold.setText("Gold: " + gl.getGold() );
-        farmprice.setText("$ " + gl.getBuildingPrice(Building.Type.FARM)  + " Level " + gl.getBuildingLevel(Building.Type.FARM));
-        tavernprice.setText("$ " + gl.getBuildingPrice(Building.Type.TAVERN) + " Level " + gl.getBuildingLevel(Building.Type.TAVERN));
-        libraryprice.setText("$ " + gl.getBuildingPrice(Building.Type.LIBRARY) + " Level " + gl.getBuildingLevel(Building.Type.LIBRARY));
-        barracksprice.setText("$ " + gl.getBuildingPrice(Building.Type.BARRACKS) + " Level " + gl.getBuildingLevel(Building.Type.BARRACKS));
-
+        updateFarm();
+        updateTavern();
+        updateLibrary();
+        updateBarracks();
     }
 
 
-    public void levelUpFarm(View view){
+    public void levelUpFarm(View view) {
         //If you can't build show toast
-        if( !gl.buyBuilding(Building.Type.FARM ) ){
+        if (!gl.buyBuilding(Building.Type.FARM)) {
             Context context = getApplicationContext();
             CharSequence text = "Couldn't afford a farm";
             int duration = Toast.LENGTH_SHORT;
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
-        }else {
-            upDateFields(Building.Type.FARM, farmprice);
+        } else {
+            updateFarm();
         }
-
     }
 
-    public void levelUpTavern(View view){
+    public void levelUpTavern(View view) {
         //If you can't build show toast
-        if( !gl.buyBuilding(Building.Type.TAVERN ) ){
+        if (!gl.buyBuilding(Building.Type.TAVERN)) {
             Context context = getApplicationContext();
             CharSequence text = "Couldn't afford a tavern";
             int duration = Toast.LENGTH_SHORT;
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
-        }
-        else {
-            upDateFields(Building.Type.TAVERN, tavernprice);
+        } else {
+            updateTavern();
         }
     }
 
-    public void levelUpLibrary(View view){
+    public void levelUpLibrary(View view) {
         //If you can't build show toast
-        if( !gl.buyBuilding(Building.Type.LIBRARY ) ){
+        if (!gl.buyBuilding(Building.Type.LIBRARY)) {
             Context context = getApplicationContext();
             CharSequence text = "Couldn't afford a Library";
             int duration = Toast.LENGTH_SHORT;
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+        } else {
+            updateLibrary();
         }
-        else
-            upDateFields(Building.Type.LIBRARY, libraryprice);
+
 
     }
 
-    public void levelUpBarracks(View view){
+    public void levelUpBarracks(View view) {
         //If you can't build show toast
-        if( !gl.buyBuilding(Building.Type.BARRACKS ) ){
+        if (!gl.buyBuilding(Building.Type.BARRACKS)) {
             Context context = getApplicationContext();
             CharSequence text = "Couldn't afford a barrack";
             int duration = Toast.LENGTH_SHORT;
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+        } else {
+            updateBarracks();
         }
-        else
-            upDateFields(Building.Type.BARRACKS, barracksprice);
+    }
+
+
+    public void updateFarm() {
+        gold.setText("Current $: " + gl.getGold());
+        farmbutton.setText("Farm level " + gl.getBuildingLevel(Building.Type.FARM) + "\n" + getResources().getString(R.string.nextlevel) + " $" + gl.getBuildingPrice(Building.Type.FARM));
+    }
+
+
+
+    public void updateTavern() {
+        gold.setText("Current $: " + gl.getGold());
+        tavernbutton.setText("Tavern level: " + gl.getBuildingLevel(Building.Type.TAVERN) + "\n" + getResources().getString(R.string.nextlevel) + " $" + gl.getBuildingPrice(Building.Type.TAVERN));
 
     }
 
-    public void upDateFields(Building.Type building, TextView tv){
+
+    public void updateLibrary(){
         gold.setText("Current $: " + gl.getGold());
-        tv.setText("$" + gl.getBuildingPrice(building) + " Level " + gl.getBuildingLevel(building));
+        librarybutton.setText("Library level: " + gl.getBuildingLevel(Building.Type.LIBRARY) +"\n" + getResources().getString(R.string.nextlevel) + " $" + gl.getBuildingPrice(Building.Type.LIBRARY));
+    }
+
+    public void updateBarracks(){
+        gold.setText("Current $: " + gl.getGold());
+        barracksbutton.setText("Barracks level: " + gl.getBuildingLevel(Building.Type.BARRACKS) +"\n" + getResources().getString(R.string.nextlevel) + " $" + gl.getBuildingPrice(Building.Type.BARRACKS));
+
     }
 }

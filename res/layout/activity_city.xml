@@ -7,9 +7,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_weight="0.03">
+
         <TextView
             android:id="@+id/city"
             android:text="@string/citytext"
@@ -26,15 +27,15 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <ImageButton
+        <Button
 
             android:id="@+id/farmbuilding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/farmbutton"
+            android:layout_width="230dp"
+            android:layout_height="50dp"
+            android:text="@string/levelFarm"
             android:onClick="levelUpFarm"
             style="?android:attr/borderlessButtonStyle">
-        </ImageButton>
+        </Button>
 
         <TextView
             android:id="@+id/farmprice"
@@ -47,15 +48,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ImageButton
+        <Button
             android:id="@+id/tavernbuilding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/tavernbutton"
+            android:layout_width="230dp"
+            android:layout_height="50dp"
+            android:text="@string/levelTavern"
             android:onClick="levelUpTavern"
             style="?android:attr/borderlessButtonStyle">
 
-        </ImageButton>
+        </Button>
         <TextView
             android:id="@+id/tavernprice"
             android:layout_width="wrap_content"
@@ -68,14 +69,14 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <ImageButton
+        <Button
             android:id="@+id/librarybuilding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/librarybutton"
+            android:layout_width="230dp"
+            android:layout_height="50dp"
+            android:text="@string/levelLibrary"
             android:onClick="levelUpLibrary"
             style="?android:attr/borderlessButtonStyle">
-        </ImageButton>
+        </Button>
 
         <TextView
             android:id="@+id/libraryprice"
@@ -87,15 +88,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-        <ImageButton
+        <Button
             android:id="@+id/barracksbuilding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/barracksbutton"
+            android:layout_width="230dp"
+            android:layout_height="50dp"
+            android:text="@string/levelBarracks"
             android:onClick="levelUpBarracks"
             style="?android:attr/borderlessButtonStyle">
 
-        </ImageButton>
+        </Button>
 
         <TextView
             android:id="@+id/barracksprice"
