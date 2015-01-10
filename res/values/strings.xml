@@ -15,10 +15,11 @@
     <string name="treasureButton">Go to your treasures</string>
     <string name="mapButton">Go to map</string>
     <string name="citytext">This is city</string>
-    <string name="levelFarm">Level up farm </string>
-    <string name="levelTavern">Level up tavern </string>
-    <string name="levelLibrary">Level up library </string>
-    <string name="levelBarracks">Level up barracks </string>
+    <string name="levelFarm">Next level </string>
+    <string name="levelTavern">Next level </string>
+    <string name="levelLibrary">Level up library for </string>
+    <string name="levelBarracks">Level up barracks for </string>
+    <string name="nextlevel">Next level cost </string>
     <string name="questscreen">QUEST!</string>
     <string name="newquest">Get new quest</string>
     <string name="abortquest">Abort current quest</string>
