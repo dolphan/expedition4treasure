@@ -72,15 +72,30 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
         starting = true;
 
         // Fetch the our last location to get a faster fix on our new location
-        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        myLocationCoordinates = new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
-        myLocationMarker = map.addMarker(new MarkerOptions().position(myLocationCoordinates).title("You are here"));
 
-        // Move the camera to the last known location (this will make it seem that the camera starts nearby)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15));
+        // Check which providers are available and request updates if they are
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            myLocationCoordinates = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            myLocationMarker = map.addMarker(new MarkerOptions().position(myLocationCoordinates).title("You are here"));
 
-        // Start Location updates with high frequency of updates to get a faster fix
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
+            // Move the camera to the last known location (this will make it seem that the camera starts nearby)
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15));
+
+            // Start Location updates with high frequency of updates to get a faster fix
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
+
+        }else if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            myLocationCoordinates = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            myLocationMarker = map.addMarker(new MarkerOptions().position(myLocationCoordinates).title("You are here"));
+
+            // Move the camera to the last known location (this will make it seem that the camera starts nearby)
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15));
+
+            // Start Location updates with high frequency of updates to get a faster fix
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+        }
 
         // Add a marker for our quest (destination)
         if(gameLogic.getCurrentQuest() != null){
@@ -134,7 +149,10 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
             if(location.getAccuracy() < 50 && starting) {
                 Log.i("GPS", "GPS accuracy goal achieved");
                 Log.i("GPS", "Changing update frequency to once every five seconds");
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, this);
+
+                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, this);
+                }
 
                 // We  adjust the camera when the app was started and when we have a fixed position
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15));
