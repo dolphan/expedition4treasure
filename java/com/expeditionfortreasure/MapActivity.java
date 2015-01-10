@@ -73,28 +73,32 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
 
         // Fetch the our last location to get a faster fix on our new location
 
-        // Check which providers are available and request updates if they are
-        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            myLocationCoordinates = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            myLocationMarker = map.addMarker(new MarkerOptions().position(myLocationCoordinates).title("You are here"));
+        if(locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER) || locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)) {
 
-            // Move the camera to the last known location (this will make it seem that the camera starts nearby)
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15));
+            // Check which providers are available and request updates if they are
 
-            // Start Location updates with high frequency of updates to get a faster fix
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
+            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                myLocationCoordinates = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                myLocationMarker = map.addMarker(new MarkerOptions().position(myLocationCoordinates).title("You are here"));
 
-        }else if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            myLocationCoordinates = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            myLocationMarker = map.addMarker(new MarkerOptions().position(myLocationCoordinates).title("You are here"));
+                // Move the camera to the last known location (this will make it seem that the camera starts nearby)
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15));
 
-            // Move the camera to the last known location (this will make it seem that the camera starts nearby)
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15));
+                // Start Location updates with high frequency of updates to get a faster fix
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
 
-            // Start Location updates with high frequency of updates to get a faster fix
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+            } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                myLocationCoordinates = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                myLocationMarker = map.addMarker(new MarkerOptions().position(myLocationCoordinates).title("You are here"));
+
+                // Move the camera to the last known location (this will make it seem that the camera starts nearby)
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15));
+
+                // Start Location updates with high frequency of updates to get a faster fix
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+            }
         }
 
         // Add a marker for our quest (destination)
@@ -190,6 +194,12 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
                     Log.d("QUEST", "Distance - Formula: " + CalculationByDistance(myLocationCoordinates, treasure));
                     Log.d("QUEST", "My coordinates " + location.getLatitude() + ", " + location.getLongitude());
                     Log.d("QUEST", "Quest coordinates " + gameLogic.getCurrentQuest().getTreasure().latitude + ", " + gameLogic.getCurrentQuest().getTreasure().longitude);
+
+                    // If we are closer than 20 meters, complete quest
+                    if(CalculationByDistance(myLocationCoordinates, treasure) <= 0.020){
+                        Log.d("QUEST", "Quest complete (Closer than 20 meters)");
+                        gameLogic.completeQuest();
+                    }
                 }
             }
 //            try {
