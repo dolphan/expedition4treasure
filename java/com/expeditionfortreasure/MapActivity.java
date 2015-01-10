@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.expeditionfortreasure.logic.GameLogic;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -99,6 +100,9 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
                 // Start Location updates with high frequency of updates to get a faster fix
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
             }
+        }else{
+            Log.d("GPS", "No Provider enabled");
+            // Should inform user that no provider was found
         }
 
         // Add a marker for our quest (destination)
@@ -199,6 +203,9 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
                     if(CalculationByDistance(myLocationCoordinates, treasure) <= 0.020){
                         Log.d("QUEST", "Quest complete (Closer than 20 meters)");
                         gameLogic.completeQuest();
+
+                        Toast questCompleteToast = Toast.makeText(this, "Congratulations, Quest Complete", Toast.LENGTH_LONG);
+                        questCompleteToast.show();
                     }
                 }
             }
