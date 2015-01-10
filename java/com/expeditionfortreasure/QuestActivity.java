@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.expeditionfortreasure.logic.GameLogic;
 
@@ -23,6 +24,12 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest);
+
+        // Retrieve the button to generate new quests, disable it
+        Button btn = (Button) findViewById(R.id.newquest);
+        btn.setEnabled(false);
+
+
         gl = GameLogic.getInstance();
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
     }
@@ -38,7 +45,15 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
     @Override
     protected void onResume(){
         super.onResume();
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
+
+        // We might want to change this so that it uses both (if available)
+        // Inform user if none available
+
+        if(locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
+        }else if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+        }
     }
 
     @Override
@@ -94,8 +109,15 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("GPS","Location changed");
-        loc = location;
+        // Retrieve button and enable it when we have a new location
+        if(location.getAccuracy() < 50) {
+            Log.d("QUEST", "New location in QuestListener");
+            Button btn = (Button) findViewById(R.id.newquest);
+            btn.setEnabled(true);
+
+            // Save location
+            loc = location;
+        }
     }
 
     @Override
