@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.expeditionfortreasure.file.FileHandling;
 import com.expeditionfortreasure.logic.GameLogic;
 
 
@@ -26,7 +28,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         //TODO READ FROM SQL DATABASE
-        gl = GameLogic.getInstance();
+        Log.v("File", "Loading instance");
+        gl = GameLogic.getInstance(getApplicationContext());
+        Log.v("File", "Got instance");
 
     }
 

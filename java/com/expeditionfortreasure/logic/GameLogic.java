@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.expeditionfortreasure.QuestActivity;
+import com.expeditionfortreasure.file.FileHandling;
 import com.expeditionfortreasure.logic.building.Building;
 import com.expeditionfortreasure.logic.building.*;
 
@@ -16,7 +17,7 @@ import com.expeditionfortreasure.logic.building.*;
  * Singleton logic that handles all player progress
  */
 
-public class GameLogic implements Serializable{
+public class  GameLogic implements Serializable{
 
 	private GameLogic() {
         init();
@@ -63,8 +64,7 @@ public class GameLogic implements Serializable{
             currentQuest = Quest.getNewQuest(myLocation, context);
             Log.d("Quest","Got quest");
             //TODO CHANGE, ONLY FOR DEBUG
-            if(currentQuest != null)
-                completedQuests.add(currentQuest);
+            completedQuests.add(currentQuest);
         }
     }
 
@@ -86,7 +86,6 @@ public class GameLogic implements Serializable{
         if(currentQuest != null) {
             int bonus = (city.get(Building.Type.TAVERN).getLevel() / 100) * currentQuest.reward;
             gold += currentQuest.reward + bonus;
-            completedQuests.add(currentQuest);
             currentQuest = null;
         }
     }
@@ -96,11 +95,24 @@ public class GameLogic implements Serializable{
         }
     }
 
-    public static GameLogic getInstance() {
+
+    //Checks if there is a file to load logic from
+    public static GameLogic getInstance(Context context) {
+        Log.v("File", "2");
         if(instance == null ) {
-            instance = new GameLogic();
+            Log.v("File", "3");
+            GameLogic tmp = FileHandling.loadFile(context);
+            if(tmp != null){
+                Log.v("File", "no file");
+                instance = tmp;
+            }else {
+                Log.v("File", "created new logic");
+                instance = new GameLogic();
+            }
+            //jhfjh
         }
 
+        Log.v("File", "returning instance");
         return instance;
     }
 

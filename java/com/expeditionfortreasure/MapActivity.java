@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.expeditionfortreasure.file.FileHandling;
 import com.expeditionfortreasure.logic.GameLogic;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,7 +64,7 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
         // Fetch the games logic (and state)
-        gameLogic = gameLogic.getInstance();
+        gameLogic = gameLogic.getInstance(this);
     }
 
     @Override
@@ -203,6 +204,7 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
                     if(gameLogic.getCurrentQuest() != null){
 //                        LatLng treasure = new LatLng(59.323678,18.047787); // Sjön
                         LatLng treasure = new LatLng(gameLogic.getCurrentQuest().getTreasure().latitude, gameLogic.getCurrentQuest().getTreasure().longitude);
+                        //Debug
                         Log.d("QUEST", "Distance - Formula: " + CalculationByDistance(myLocationCoordinates, treasure));
                         Log.d("QUEST", "My coordinates " + location.getLatitude() + ", " + location.getLongitude());
                         Log.d("QUEST", "Quest coordinates " + gameLogic.getCurrentQuest().getTreasure().latitude + ", " + gameLogic.getCurrentQuest().getTreasure().longitude);
@@ -211,7 +213,7 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
                         if(CalculationByDistance(myLocationCoordinates, treasure) <= 0.020){
                             Log.d("QUEST", "Quest complete (Closer than 20 meters)");
                             gameLogic.completeQuest();
-
+                            FileHandling.saveFile(this, gameLogic);
                             Toast questCompleteToast = Toast.makeText(this, "Congratulations, Quest Complete", Toast.LENGTH_LONG);
                             questCompleteToast.show();
                         }

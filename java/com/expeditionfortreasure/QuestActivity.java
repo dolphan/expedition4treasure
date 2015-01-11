@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.expeditionfortreasure.file.FileHandling;
 import com.expeditionfortreasure.logic.GameLogic;
 
 
@@ -31,7 +32,7 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
         btn.setEnabled(false);
 
 
-        gl = GameLogic.getInstance();
+        gl = GameLogic.getInstance(getApplicationContext());
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
     }
 
@@ -86,11 +87,17 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
 
                 gl.newQuest(loc, this);
 
-                if(gl.getCurrentQuest() != null)
-                    Log.d("Treasure", "trs loc " + gl.getCurrentQuest().getTreasure().latitude + "/" + gl.getCurrentQuest().getTreasure().longitude);
+                Log.d("Treasure", "trs loc " + gl.getCurrentQuest().getTreasure().latitude + "/" + gl.getCurrentQuest().getTreasure().longitude);
             }
         }
+        else {
+            // Should notify user that he could not be located (toast?)
+            Log.d("Treasure", "No location");
+        }
         updateButtons();
+        FileHandling.saveFile(this, gl);
+       // int number = gl.getCurrentQuest().number;
+       // Log.v("Quest", "New quest " + number);
     }
 
     public void abortQuest(View view){
@@ -104,6 +111,7 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
 
         startActivity(intent);
         updateButtons();
+        FileHandling.saveFile(this, gl);
     }
 
     @Override
@@ -129,6 +137,7 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
 
         Log.d("GPS", "Turning off GPS");
         locationManager.removeUpdates(this);
+        FileHandling.saveFile(this, gl);
     }
 
     @Override
@@ -138,7 +147,7 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
     @Override
     public void onProviderDisabled(String provider) {}
 
-    public void updateButtons(){
+    private void updateButtons(){
         Button newbtn, abortbtn;
         newbtn = (Button) findViewById(R.id.newquest);
         abortbtn = (Button) findViewById(R.id.abortquest);

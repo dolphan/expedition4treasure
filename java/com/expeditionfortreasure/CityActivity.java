@@ -3,6 +3,7 @@ package com.expeditionfortreasure;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.expeditionfortreasure.file.FileHandling;
 import com.expeditionfortreasure.logic.*;
 import com.expeditionfortreasure.logic.building.*;
 
@@ -24,13 +26,7 @@ public class CityActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city);
-
-        gl = GameLogic.getInstance();
         gold = (TextView) findViewById(R.id.cityGold);
-        farmprice = (TextView) findViewById(R.id.farmprice);
-        tavernprice = (TextView) findViewById(R.id.tavernprice);
-        libraryprice = (TextView) findViewById(R.id.libraryprice);
-        barracksprice = (TextView) findViewById(R.id.barracksprice);
         farmbutton = (Button) findViewById(R.id.farmbuilding);
         tavernbutton = (Button) findViewById(R.id.tavernbuilding);
         librarybutton = (Button) findViewById(R.id.librarybuilding);
@@ -64,10 +60,13 @@ public class CityActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateFarm();
-        updateTavern();
-        updateLibrary();
-        updateBarracks();
+
+        Log.v("File", "1");
+        gl = GameLogic.getInstance(getApplicationContext());
+        Log.v("File", "Got the intance");
+
+
+        updateAll();
     }
 
 
@@ -135,29 +134,30 @@ public class CityActivity extends ActionBarActivity {
         updateTavern();
         updateLibrary();
         updateBarracks();
+        FileHandling.saveFile(this, gl);
     }
 
     public void updateFarm() {
-        gold.setText("Current $: " + gl.getGold());
+//        gold.setText("Current $: " + gl.getGold());
         farmbutton.setText("Farm level " + gl.getBuildingLevel(Building.Type.FARM) + "\n" + getResources().getString(R.string.nextlevel) + " $" + gl.getBuildingPrice(Building.Type.FARM));
     }
 
 
 
     public void updateTavern() {
-        gold.setText("Current $: " + gl.getGold());
+  //      gold.setText("Current $: " + gl.getGold());
         tavernbutton.setText("Tavern level: " + gl.getBuildingLevel(Building.Type.TAVERN) + "\n" + getResources().getString(R.string.nextlevel) + " $" + gl.getBuildingPrice(Building.Type.TAVERN));
 
     }
 
 
     public void updateLibrary(){
-        gold.setText("Current $: " + gl.getGold());
+        //gold.setText("Current $: " + gl.getGold());
         librarybutton.setText("Library level: " + gl.getBuildingLevel(Building.Type.LIBRARY) +"\n" + getResources().getString(R.string.nextlevel) + " $" + gl.getBuildingPrice(Building.Type.LIBRARY));
     }
 
     public void updateBarracks(){
-        gold.setText("Current $: " + gl.getGold());
+        //gold.setText("Current $: " + gl.getGold());
         barracksbutton.setText("Barracks level: " + gl.getBuildingLevel(Building.Type.BARRACKS) +"\n" + getResources().getString(R.string.nextlevel) + " $" + gl.getBuildingPrice(Building.Type.BARRACKS));
 
     }
