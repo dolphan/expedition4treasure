@@ -81,7 +81,7 @@ public class CityActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
-            updateFarm();
+            updateAll();
         }
     }
 
@@ -95,7 +95,7 @@ public class CityActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
-            updateTavern();
+            updateAll();
         }
     }
 
@@ -109,7 +109,7 @@ public class CityActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
-            updateLibrary();
+            updateAll();
         }
 
 
@@ -125,10 +125,17 @@ public class CityActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
-            updateBarracks();
+            updateAll();
         }
     }
 
+
+    public void updateAll(){
+        updateFarm();
+        updateTavern();
+        updateLibrary();
+        updateBarracks();
+    }
 
     public void updateFarm() {
         gold.setText("Current $: " + gl.getGold());

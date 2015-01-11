@@ -15,14 +15,18 @@ public abstract class Building implements Serializable{
 		currentPrice = basePrice;
 	}
 
-	public void buyOneLevel(){
-		level++;
-		calculateNewPrice();
+	public boolean buyOneLevel(){
+		if(level < 99) {
+            level++;
+            calculateNewPrice();
+            return true;
+        }
+       return  false;
 	}
 	
 
 	protected void calculateNewPrice(){
-		currentPrice += level;
+		currentPrice += 2*level;
 	}
 	
 

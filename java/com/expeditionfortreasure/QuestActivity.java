@@ -54,6 +54,8 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
         }else if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
         }
+        updateButtons();
+
     }
 
     @Override
@@ -72,8 +74,6 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
     }
 
     public void newQuest(View view){
-        Log.d("Treasure", "Start locationlistne");
-
         // Problem: Sometimes we don't have a location yet, should fix this (Waiting for location?)
 
         if(loc != null) {
@@ -90,6 +90,7 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
             // Should notify user that he could not be located (toast?)
             Log.d("Treasure", "No location");
         }
+        updateButtons();
        // int number = gl.getCurrentQuest().number;
        // Log.v("Quest", "New quest " + number);
     }
@@ -97,14 +98,14 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
     public void abortQuest(View view){
 
         gl.abortQuest();
-        Log.v("Quest","Aborted quest");
+        updateButtons();
     }
 
     public void readQuest(View view){
         Intent intent = new Intent(this, QuestLogActivity.class);
-        Log.v("Quest","Starting questlog");
-        startActivity(intent);
 
+        startActivity(intent);
+        updateButtons();
     }
 
     @Override
@@ -134,4 +135,18 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
     public void onProviderEnabled(String provider) {}
     @Override
     public void onProviderDisabled(String provider) {}
+
+    public void updateButtons(){
+        Button newbtn, abortbtn;
+        newbtn = (Button) findViewById(R.id.newquest);
+        abortbtn = (Button) findViewById(R.id.abortquest);
+
+        if(gl.getCurrentQuest() == null){
+            newbtn.setEnabled(true);
+            abortbtn.setEnabled(false);
+        }else {
+            newbtn.setEnabled(false);
+            abortbtn.setEnabled(true);
+        }
+    }
 }

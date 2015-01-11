@@ -36,9 +36,9 @@ public class GameLogic implements Serializable{
 	}
 	
 	public boolean buyBuilding(Building.Type building){
-
-		if(gold >= city.get(building).getCurrentPrice() ){
-			gold -= city.get(building).getCurrentPrice();
+        int tmpBasePrice = getBuildingPrice(building);
+		if(gold >= tmpBasePrice ){
+			gold -= tmpBasePrice;
 			city.get(building).buyOneLevel();
             return true;
 		}
@@ -52,7 +52,9 @@ public class GameLogic implements Serializable{
 
     public int getGold() { return gold; }
 
-	public int getBuildingPrice(Building.Type building){ return city.get(building).getCurrentPrice(); }
+	public int getBuildingPrice(Building.Type building){
+        int discount = ((city.get(Building.Type.FARM).getLevel()/100) * city.get(building).getCurrentPrice());
+        return city.get(building).getCurrentPrice() - discount; }
 
     public void newQuest(Location myLocation, Context context){
         if(currentQuest == null) {
@@ -80,9 +82,12 @@ public class GameLogic implements Serializable{
 
     public void completeQuest(){
         //Make proper methods
-        gold += currentQuest.reward;
-        completedQuests.add(currentQuest);
-        currentQuest = null;
+        if(currentQuest != null) {
+            int bonus = (city.get(Building.Type.TAVERN).getLevel() / 100) * currentQuest.reward;
+            gold += currentQuest.reward + bonus;
+            completedQuests.add(currentQuest);
+            currentQuest = null;
+        }
     }
 
     public void readQuestLog(){

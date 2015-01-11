@@ -48,28 +48,19 @@ public class MainActivity extends ActionBarActivity {
 
     public void goToCity(View view){
         Intent intent = new Intent(this, CityActivity.class);
-
         startActivity(intent);
 
     }
 
     public void goToQuest(View view){
         Intent intent = new Intent(this, QuestActivity.class);
-
         startActivity(intent);
 
     }
 
-    public void goToTreasure(View view){
-        Intent intent = new Intent(this, TreasureActivity.class);
-
-        startActivity(intent);
-
-    }
 
     public void goToMap(View view){
         Intent intent = new Intent(this, MapActivity.class);
-
         startActivity(intent);
 
     }
