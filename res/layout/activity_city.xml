@@ -5,16 +5,12 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="0.03">
+
 
         <TextView
             android:id="@+id/city"
             android:text="@string/citytext"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -22,87 +18,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
         <Button
 
             android:id="@+id/farmbuilding"
-            android:layout_width="230dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="@string/levelFarm"
             android:onClick="levelUpFarm"
             style="?android:attr/borderlessButtonStyle">
         </Button>
 
-        <TextView
-            android:id="@+id/farmprice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/tavernbuilding"
-            android:layout_width="230dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="@string/levelTavern"
             android:onClick="levelUpTavern"
             style="?android:attr/borderlessButtonStyle">
 
         </Button>
-        <TextView
-            android:id="@+id/tavernprice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
         <Button
             android:id="@+id/librarybuilding"
-            android:layout_width="230dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="@string/levelLibrary"
             android:onClick="levelUpLibrary"
             style="?android:attr/borderlessButtonStyle">
         </Button>
 
-        <TextView
-            android:id="@+id/libraryprice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
         <Button
             android:id="@+id/barracksbuilding"
-            android:layout_width="230dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="@string/levelBarracks"
             android:onClick="levelUpBarracks"
             style="?android:attr/borderlessButtonStyle">
 
         </Button>
-
-        <TextView
-            android:id="@+id/barracksprice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 
 
 </LinearLayout>

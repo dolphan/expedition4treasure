@@ -13,21 +13,21 @@
     <Button
         style="?android:attr/borderlessButtonStyle"
         android:id="@+id/newquest"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="@string/newquest"
         android:onClick="newQuest"/>
     <Button
         style="?android:attr/borderlessButtonStyle"
         android:id="@+id/abortquest"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="@string/abortquest"
         android:onClick="abortQuest"/>
     <Button
         style="?android:attr/borderlessButtonStyle"
         android:id="@+id/readquest"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="@string/readquest"
         android:onClick="readQuest"/>
