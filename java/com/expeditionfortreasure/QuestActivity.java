@@ -19,6 +19,7 @@ import com.expeditionfortreasure.logic.GameLogic;
 public class QuestActivity extends ActionBarActivity implements LocationListener{
     GameLogic gl;
     Location loc;
+    boolean hasLocation = false;
     private LocationManager locationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,12 +116,16 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
         // Retrieve button and enable it when we have a new location
         if(location.getAccuracy() < 50) {
             Log.d("QUEST", "New location in QuestListener");
-            Button btn = (Button) findViewById(R.id.newquest);
-            btn.setEnabled(true);
+            //Button btn = (Button) findViewById(R.id.newquest);
+            //btn.setEnabled(true);
+            hasLocation = true;
 
             // Save location
             loc = location;
         }
+        else hasLocation = false;
+
+        updateButtons();
     }
 
     @Override
@@ -144,11 +149,16 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
         abortbtn = (Button) findViewById(R.id.abortquest);
 
         if(gl.getCurrentQuest() == null){
-            newbtn.setEnabled(true);
             abortbtn.setEnabled(false);
+
         }else {
-            newbtn.setEnabled(false);
             abortbtn.setEnabled(true);
         }
+
+        if(gl.getCurrentQuest() == null && hasLocation){
+            newbtn.setEnabled(true);
+        }
+        else newbtn.setEnabled(false);
+
     }
 }
