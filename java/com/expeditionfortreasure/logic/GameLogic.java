@@ -69,6 +69,11 @@ public class  GameLogic implements Serializable{
     }
 
     public void abortQuest(){
+        for(Quest q : completedQuests){
+            if(currentQuest == q)
+                completedQuests.remove(q);
+        }
+
         currentQuest = null;
     }
 
