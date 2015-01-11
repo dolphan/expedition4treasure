@@ -21,7 +21,7 @@ public class QuestLogActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest_log);
         ll = (LinearLayout) findViewById(R.id.questloglayout);
-        gl = GameLogic.getInstance();
+        gl = GameLogic.getInstance(getApplicationContext());
 
     }
 
@@ -59,10 +59,10 @@ public class QuestLogActivity extends Activity {
         for(int i = 0; i < size; i++){
             tmpQ = gl.readQuest().get(i);
             temp = new TextView(this);
-            temp.setText("Quest: " + tmpQ.number + " Rewarded " + tmpQ.reward );
+            temp.setText("Quest @ : " + tmpQ.getCoord() + " Rewarded " + tmpQ.reward );
             ll.addView(temp);
             tv[i] = temp;
-            tv[i].setText("Quest: " + tmpQ.number + " Rewarded " + tmpQ.reward );
+            tv[i].setText("Quest: " + tmpQ.getCoord() + " Rewarded " + tmpQ.reward );
         }
 
     }
