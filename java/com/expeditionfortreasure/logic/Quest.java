@@ -63,8 +63,9 @@ public class Quest {
                     } else {
                         Log.d("QUEST", "Postal Code: " + treasureAdress.get(0).getPostalCode());
                         Log.d("GPS", "The treasue is located on: " + treasureAdress.get(0).getAddressLine(0));
-                        lat = 59.278752;
-                        lng = 18.010136;
+                        // Hardcoded for testing
+//                        lat = 59.262837;
+//                        lng = 17.981340;
                         return new LatLng(lat, lng);
                     }
                 } else {
