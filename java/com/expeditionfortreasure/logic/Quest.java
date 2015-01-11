@@ -26,6 +26,7 @@ public class Quest {
 
     private Quest(Location myLocation, Context context){
         treasure = randomizeTreasure(myLocation, context);
+        finished = false;
     }
 
 
@@ -81,4 +82,11 @@ public class Quest {
         return treasure.latitude + "/" + treasure.longitude;
     }
 
+    public void completeQuest(){
+        finished = true;
+    }
+
+    public boolean isComplete(){
+        return finished;
+    }
 }

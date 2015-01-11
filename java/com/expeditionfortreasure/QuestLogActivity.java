@@ -59,10 +59,15 @@ public class QuestLogActivity extends Activity {
         for(int i = 0; i < size; i++){
             tmpQ = gl.readQuest().get(i);
             temp = new TextView(this);
-            temp.setText("Quest @ : " + tmpQ.getCoord() + " Rewarded " + tmpQ.reward );
+            String message = null;
+            if(tmpQ.isComplete())
+                message = "Finished quest @ " + tmpQ.getCoord() + " Rewarded : " + tmpQ.reward;
+            else
+                message = "Active quest @ " + tmpQ.getCoord() + " Rewarded : " + tmpQ.reward;
+            temp.setText(message);
             ll.addView(temp);
             tv[i] = temp;
-            tv[i].setText("Quest: " + tmpQ.getCoord() + " Rewarded " + tmpQ.reward );
+            tv[i].setText(message);
         }
 
     }
