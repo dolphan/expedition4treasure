@@ -51,7 +51,9 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
 
         if(locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER)) {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
-        }else if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
+        }
+
+        if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
         }
         updateButtons();
