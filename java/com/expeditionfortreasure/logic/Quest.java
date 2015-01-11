@@ -82,7 +82,8 @@ public class Quest {
         return treasure.latitude + "/" + treasure.longitude;
     }
 
-    public void completeQuest(){
+    public void completeQuest(int bonus){
+        reward += bonus;
         finished = true;
     }
 

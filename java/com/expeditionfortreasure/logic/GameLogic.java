@@ -59,10 +59,12 @@ public class  GameLogic implements Serializable{
 
     public void newQuest(Location myLocation, Context context){
         if(currentQuest == null) {
-
+            Log.d("Quest","Getting new quest");
 
             currentQuest = Quest.getNewQuest(myLocation, context);
-
+            Log.d("Quest","Got quest");
+            //TODO CHANGE, ONLY FOR DEBUG
+            completedQuests.add(currentQuest);
         }
     }
 
@@ -84,7 +86,9 @@ public class  GameLogic implements Serializable{
         if(currentQuest != null) {
             int bonus = (city.get(Building.Type.TAVERN).getLevel() / 100) * currentQuest.reward;
             gold += currentQuest.reward + bonus;
+            currentQuest.completeQuest(bonus);
             currentQuest = null;
+
         }
     }
 
