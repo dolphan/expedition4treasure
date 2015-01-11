@@ -63,7 +63,8 @@ public class GameLogic implements Serializable{
             currentQuest = Quest.getNewQuest(myLocation, context);
             Log.d("Quest","Got quest");
             //TODO CHANGE, ONLY FOR DEBUG
-            completedQuests.add(currentQuest);
+            if(currentQuest != null)
+                completedQuests.add(currentQuest);
         }
     }
 

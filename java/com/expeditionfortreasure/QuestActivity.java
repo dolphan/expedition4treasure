@@ -86,16 +86,11 @@ public class QuestActivity extends ActionBarActivity implements LocationListener
 
                 gl.newQuest(loc, this);
 
-                Log.d("Treasure", "trs loc " + gl.getCurrentQuest().getTreasure().latitude + "/" + gl.getCurrentQuest().getTreasure().longitude);
+                if(gl.getCurrentQuest() != null)
+                    Log.d("Treasure", "trs loc " + gl.getCurrentQuest().getTreasure().latitude + "/" + gl.getCurrentQuest().getTreasure().longitude);
             }
         }
-        else {
-            // Should notify user that he could not be located (toast?)
-            Log.d("Treasure", "No location");
-        }
         updateButtons();
-       // int number = gl.getCurrentQuest().number;
-       // Log.v("Quest", "New quest " + number);
     }
 
     public void abortQuest(View view){

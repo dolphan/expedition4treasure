@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -24,8 +25,8 @@ public class Quest {
     boolean finished;
     LatLng treasure;
 
-    private Quest(Location myLocation, Context context){
-        treasure = randomizeTreasure(myLocation, context);
+    private Quest(LatLng treasureLocation, Context context){
+        treasure = treasureLocation;
     }
 
 
@@ -34,19 +35,25 @@ public class Quest {
     */
     public static Quest getNewQuest(Location myLocation, Context context){
 
-        return new Quest(myLocation, context);
+        LatLng tmp;
+        tmp = randomizeTreasure(myLocation, context);
+
+        if(tmp != null)
+            return new Quest(tmp, context);
+        else
+            return null;
     }
 
     public LatLng getTreasure(){
         return treasure;
     }
 
-    private LatLng randomizeTreasure(Location location, Context context){
+    private static LatLng randomizeTreasure(Location location, Context context){
         // Code that randomize location
         double lat, lng, angle;
 
         // Add timeout?
-        while(true) {
+        for(int i = 0; i < 10; i++) {
             angle = (Math.random() * 2 * Math.PI);
             lat = location.getLatitude() + Math.cos(angle) / 10;
             lng = location.getLongitude() + Math.sin(angle) / 10;
@@ -75,6 +82,11 @@ public class Quest {
                 e.printStackTrace();
             }
         }
-    }
 
+        // Got an invalid random location 10 times
+        Toast questCompleteToast = Toast.makeText(context, "Sorry, Unable to find a valid destination", Toast.LENGTH_LONG);
+        questCompleteToast.show();
+
+        return null;
+    }
 }
