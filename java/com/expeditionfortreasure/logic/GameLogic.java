@@ -59,12 +59,10 @@ public class  GameLogic implements Serializable{
 
     public void newQuest(Location myLocation, Context context){
         if(currentQuest == null) {
-            Log.d("Quest","Getting new quest");
+
 
             currentQuest = Quest.getNewQuest(myLocation, context);
-            Log.d("Quest","Got quest");
-            //TODO CHANGE, ONLY FOR DEBUG
-            completedQuests.add(currentQuest);
+
         }
     }
 
