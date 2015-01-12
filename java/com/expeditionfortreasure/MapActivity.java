@@ -1,7 +1,5 @@
 package com.expeditionfortreasure;
 
-import android.location.Address;
-import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,10 +22,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Locale;
 
 
 public class MapActivity extends ActionBarActivity implements LocationListener{
@@ -47,8 +42,11 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
     Marker treasure;
     // Coordinates
     LatLng myLocationCoordinates;
+
     // Flag signaling if we are on startup
     boolean starting;
+    boolean initGPS;
+
     Location currentBestLocation;
     private static final int MINUTE = 1000 * 60;
 
@@ -74,6 +72,7 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
         // Indicate that the application is starting
         Log.d("GPS", "Turning on GPS");
         starting = true;
+        initGPS = true;
         myLocationMarker = null;
 
         // Fetch the our last location to get a faster fix on our new location
@@ -159,21 +158,22 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
     public void onLocationChanged(Location location) {
         myLocationCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
 
-        Log.d("GPS", "Placing marker");
-
         if(map != null){
             if(location.getProvider().equals(locationManager.GPS_PROVIDER)){
-                Log.d("GPS", "Location from GPS");
-                if(location.getAccuracy() < 25){
+
+                // When the gps has established a good fix on our location, update less frequent
+                if(location.getAccuracy() < 25 && initGPS){
                     Log.i("GPS", "GPS accuracy goal achieved");
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
+                    initGPS = false;
                 }
+
             }
 
             if(location.getProvider().equals(locationManager.NETWORK_PROVIDER)){
-                Log.d("GPS", "Location from Network provider");
-                // If we just started the application, get the first location that with 50 or better accuracy
-                // Then request updates less frequent
+
+                // When the Network provider has established a good fix on our location
+                // update less frequent
                 if(location.getAccuracy() < 50 && starting) {
                     Log.i("GPS", "Changing update frequency to once every five seconds");
 
@@ -186,88 +186,38 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
                     // We now have a accurate fix on our position, request position less often
                     starting = false;
                 }
+
             }
 
             // Check if the new location is better
             if(isBetterLocation(location)){
+                // If it is, set as new best location
                 currentBestLocation = location;
-                Log.d("GPS", "New Acc: " + location.getAccuracy());
-                // If the new location is better, draw it on map
-                if(location.getAccuracy() < 50) {
-                    // Change the position of the marker representing our location
-                    myLocationMarker.setPosition(myLocationCoordinates);
-                }
-                // Only compare to treasures location if we got an accuracy of 50 or less
+
+                // We want a minimum accuracy of 50 meters
                 if(location.getAccuracy() < 50){
 
-                    // We actually have a quest
+                    // Change the position of the marker representing our location
+                    myLocationMarker.setPosition(myLocationCoordinates);
+
+                    // If we have a quest active, calculate distance to it
                     if(gameLogic.getCurrentQuest() != null){
-//                        LatLng treasure = new LatLng(59.323678,18.047787); // Sjön
+
+                        // Get active quests coordinates
                         LatLng treasure = new LatLng(gameLogic.getCurrentQuest().getTreasure().latitude, gameLogic.getCurrentQuest().getTreasure().longitude);
-                        //Debug
-                        Log.d("QUEST", "Distance - Formula: " + CalculationByDistance(myLocationCoordinates, treasure));
-                        Log.d("QUEST", "My coordinates " + location.getLatitude() + ", " + location.getLongitude());
-                        Log.d("QUEST", "Quest coordinates " + gameLogic.getCurrentQuest().getTreasure().latitude + ", " + gameLogic.getCurrentQuest().getTreasure().longitude);
+
+                        Log.d("QUEST", "Calculating distance");
 
                         // If we are closer than 20 meters, complete quest
-                        if(CalculationByDistance(myLocationCoordinates, treasure) <= 0.020){
-                            Log.d("QUEST", "Quest complete (Closer than 20 meters)");
+                        if(calculateDistance(myLocationCoordinates, treasure) <= 0.020){
+                            Toast questCompleteToast = Toast.makeText(this, "Quest Complete, rewarded " + gameLogic.getCurrentQuest().reward + " gold", Toast.LENGTH_LONG);
+                            questCompleteToast.show();
                             gameLogic.completeQuest();
                             FileHandling.saveFile(this, gameLogic);
-                            Toast questCompleteToast = Toast.makeText(this, "Congratulations, Quest Complete", Toast.LENGTH_LONG);
-                            questCompleteToast.show();
                         }
                     }
                 }
             }
-
-
-
-            Log.d("GPS","Acc: " + location.getAccuracy());
-            // When we got a location accurate enough, request location updates less frequent
-
-
-            Log.d("GPS", "Setting marker");
-
-
-
-            // Should fetch coordinates from the game logic
-            LatLng treasure = new LatLng(59.323678,18.047787); // Sjön
-            // Testing adding
-
-            String addressName = "";
-
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            try {
-                List<Address> listAddresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                if(null!=listAddresses&&listAddresses.size()>0){
-                    addressName = listAddresses.get(0).getAddressLine(0);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-//            try {
-//                List<Address> treasureAdress = geocoder.getFromLocation(treasure.latitude, treasure.longitude, 1);
-//                if (treasureAdress != null && treasureAdress.size() > 0){
-//                    if (treasureAdress.get(0).getPostalCode() == null) {
-//                        Log.d("GPS", "Not a valid address (No PostalCode)");
-//                    } else {
-//                        Log.d("GPS", treasureAdress.get(0).getPostalCode());
-//                        if (treasureAdress != null && treasureAdress.size() > 0) {
-//                            Log.d("GPS", "The treasue is located on: " + treasureAdress.get(0).getAddressLine(0));
-//                            Marker treasuerMarker = map.addMarker(new MarkerOptions().position(treasure).title(treasureAdress.get(0).getAddressLine(0)));
-//                        }
-//                    }
-//                }else{
-//                    Log.d("GPS", "Not a valid address(No matches)");
-//                }
-//            }catch (IOException e){
-//                e.printStackTrace();
-//            }
-//
-//            Log.d("GPS","The address is: " + addressName);
         }
     }
 
@@ -308,26 +258,32 @@ public class MapActivity extends ActionBarActivity implements LocationListener{
         return false;
     }
 
-    public double CalculationByDistance(LatLng StartP, LatLng EndP) {
-        int Radius=6371;//radius of earth in Km
-        double lat1 = StartP.latitude;
-        double lat2 = EndP.latitude;
-        double lon1 = StartP.longitude;
-        double lon2 = EndP.longitude;
+    public double calculateDistance(LatLng startCoordinate, LatLng destinationCoordinate) {
+
+        // Mean earth radius in km (Does not take location into consideration, earth is not a perfect sphere)
+        // According to Wikipedia, this results in an error margin of 0.5%
+
+        int Radius = 6371;
+
+        // Get lat/long
+        double lat1 = startCoordinate.latitude;
+        double lon1 = startCoordinate.longitude;
+        double lat2 = destinationCoordinate.latitude;
+        double lon2 = destinationCoordinate.longitude;
+
+        // Calculate difference
         double dLat = Math.toRadians(lat2-lat1);
         double dLon = Math.toRadians(lon2-lon1);
+
+        // Great Circle Distance (Computational formula (Wikipedia)
         double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                         Math.sin(dLon/2) * Math.sin(dLon/2);
-        double c = 2 * Math.asin(Math.sqrt(a));
-        double valueResult= Radius*c;
-        double km=valueResult/1;
-        DecimalFormat newFormat = new DecimalFormat("####");
-        int kmInDec =  Integer.valueOf(newFormat.format(km));
-        double meter=valueResult%1000;
-        int  meterInDec= Integer.valueOf(newFormat.format(meter));
-//        Log.i("QUEST",""+valueResult+"   KM  "+kmInDec+" Meter   "+meterInDec);
 
+        // Angle
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        // Distance
         return Radius * c;
     }
 
